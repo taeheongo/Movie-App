@@ -1,6 +1,6 @@
 # Movie App 2020 ver.
 
-## This application is the fullstack app showing the differences between Redux & REST API and Apollo GraphQL.
+## This application is the fullstack app using Apollo and Graphql.
 
 ## Technologies
 
