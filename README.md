@@ -4,17 +4,16 @@
 
 ## Technologies
 
-- HTML
-- CSS
-- React
-- Apollo
-- Redux
-- REST API
-- GraphQL
-- Node.js
-- Express.js
-- AWS(EC2)
-- MongoDB(Atlas)
+- [x] HTML
+- [x] CSS
+- [x] React
+- [x] Apollo
+- [x] REST API
+- [x] GraphQL
+- [x] Node.js
+- [x] Express.js
+- [x] AWS(EC2)
+- [x] MongoDB(Atlas)
   <br/><br/><br/>
 
 ## How to use
