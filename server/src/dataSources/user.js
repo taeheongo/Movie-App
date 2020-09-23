@@ -1,11 +1,11 @@
 import { DataSource } from "apollo-datasource";
+import { AuthenticationError } from "apollo-server";
 import { User } from "./models/User";
 import { auth } from "../utils";
 
 class UserAPI extends DataSource {
   constructor() {
     super();
-    console.log(this.context);
   }
 
   /**
@@ -18,36 +18,68 @@ class UserAPI extends DataSource {
     this.context = config.context;
   }
 
-  async login() {}
+  async login(email, password) {
+    let user = await auth(this.context.token);
 
-  async logout() {}
+    if (user) {
+      throw new AuthenticationError("You are logged in.");
+    }
+
+    user = await User.findOne({ email });
+
+    if (!user) {
+      throw new AuthenticationError("The email doesn't exists.");
+    }
+
+    let isMatch = await user.comparePassword(password);
+
+    if (!isMatch) {
+      throw new AuthenticationError("The password is not consistent.");
+    }
+
+    user = await user.generateToken();
+
+    return user;
+  }
+
+  async logout() {
+    let user = await auth(this.context.token);
+
+    if (!user) {
+      throw new AuthenticationError("You are not logged in.");
+    }
+
+    user.token = "";
+    user.tokenExp = Date.now();
+
+    await user.save();
+
+    return true;
+  }
 
   async register(email, username, password) {
-    try {
-      let { user } = auth(this.context.token);
+    let user = await auth(this.context.token);
 
-      if (user) {
-        return { success: false, message: "You are logged in" };
-      }
-
-      user = await User.findOne({ email });
-
-      if (user) {
-        return { success: false, message: "The email already exists" };
-      }
-
-      user = new User({
-        email,
-        username,
-        password,
-      });
-
-      await user.save();
-
-      return { success: true };
-    } catch (error) {
-      console.log("Register error:", error);
+    if (user) {
+      throw new AuthenticationError("You are logged in.");
     }
+
+    user = await User.findOne({ email });
+
+    if (user) {
+      throw new AuthenticationError("The email already exists.");
+    }
+
+    user = new User({
+      email,
+      username,
+      password,
+    });
+
+    await user.save();
+
+    // registered successfully!
+    return true;
   }
 }
 

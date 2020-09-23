@@ -1,3 +1,4 @@
+import { UserInputError } from "apollo-server";
 import { isEmail } from "./utils";
 
 export default {
@@ -9,9 +10,14 @@ export default {
 
         items.map((item) => {
           const actors = item.actor.split("|");
+          actors.splice(actors.length - 1, 1);
+          item.actor = actors;
 
-          item.actor = actors.filter((item) => item !== "");
-          return item.actor;
+          const directors = item.director.split("|");
+          directors.splice(directors.length - 1, 1);
+          item.director = directors;
+
+          return item;
         });
 
         return {
@@ -22,22 +28,53 @@ export default {
           hasMore: true,
         };
       } catch (error) {
+        console.error("GetMovie Error: \n", error);
         throw error;
       }
     },
   },
   Mutation: {
     register: async (_, { email, username, password }, { dataSources }) => {
-      if (!isEmail(email)) {
-        return { success: false };
+      try {
+        if (!isEmail(email)) {
+          throw new UserInputError("Invalid email format");
+        }
+
+        const isSucceeded = await dataSources.UserAPI.register(
+          email,
+          username,
+          password
+        );
+
+        return isSucceeded;
+      } catch (error) {
+        console.error("Register Error: \n", error);
+        throw error;
       }
-      const { success, message } = await dataSources.UserAPI.register(
-        email,
-        username,
-        password
-      );
-      console.log(success, message);
-      return { success, message };
+    },
+    login: async (_, { email, password }, { dataSources }) => {
+      try {
+        if (!isEmail(email)) {
+          throw new UserInputError("Invalid email format");
+        }
+
+        let user = await dataSources.UserAPI.login(email, password);
+
+        return user;
+      } catch (error) {
+        console.error("Login Error: \n", error);
+        throw error;
+      }
+    },
+    logout: async (_, __, { dataSources }) => {
+      try {
+        let isLoggedOut = dataSources.UserAPI.logout();
+
+        return isLoggedOut;
+      } catch (error) {
+        onsole.error("Login Error: \n", error);
+        throw error;
+      }
     },
   },
 };

@@ -24,6 +24,8 @@ const typeDefs = gql`
   # 23: 서사 24: 블랙코미디
   # 25: 실험 26: 영화카툰
   # 27: 영화음악 28: 영화패러디포스터
+  scalar Date
+
   type User {
     _id: String!
     username: String!
@@ -31,7 +33,7 @@ const typeDefs = gql`
     movies: [Movie]!
     role: Int!
     token: String
-    tokenExp: Int
+    tokenExp: Date
   }
 
   type Movie {
@@ -39,7 +41,7 @@ const typeDefs = gql`
     subtitle: String!
     link: String!
     userRating: Float!
-    director: String!
+    director: [String]!
     actor: [String]!
     pubDate: String!
     _id: String
@@ -53,14 +55,10 @@ const typeDefs = gql`
     movies: [Movie]
   }
 
-  type AuthResult {
-    success: Boolean!
-    message: String
-    user: User
-  }
-
   type Mutation {
-    register(email: String!, username: String!, password: String!): AuthResult!
+    register(email: String!, username: String!, password: String!): Boolean!
+    login(email: String!, password: String!): User!
+    logout: Boolean!
   }
 `;
 

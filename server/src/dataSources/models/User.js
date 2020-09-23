@@ -51,17 +51,18 @@ userSchema.pre("save", function (next) {
   }
 });
 
-userSchema.methods.comparePassword = function (plainPassword, cb) {
-  let user = this;
+userSchema.methods.comparePassword = async function (plainPassword) {
+  const user = this;
 
-  bcrypt.compare(plainPassword, user.password, (err, isMatch) => {
-    if (err) return cb(err);
-    cb(null, isMatch);
-  });
+  const result = await bcrypt
+    .compare(plainPassword, user.password)
+    .then((isMatch) => isMatch);
+
+  return result;
 };
 
-userSchema.methods.generateToken = function (cb) {
-  const user = this;
+userSchema.methods.generateToken = async function () {
+  let user = this;
 
   // Genreate token
   const token = jwt.sign(
@@ -72,36 +73,40 @@ userSchema.methods.generateToken = function (cb) {
 
   // Add token and token expiration to user
   user.token = token;
-  const sixHours = new Date().valueOf(Date.now() + 1000 * 60 * 60 * 6);
+  const sixHours = Date.now() + 1000 * 60 * 60 * 6;
   user.tokenExp = sixHours;
 
   // Save the user
-  user.save(function (err, user) {
-    if (err) return cb(err);
-    cb(null, user);
-  });
+  await user.save();
+
+  user = {
+    _id: user._id.toHexString(),
+    email: user.email,
+    username: user.username,
+    movies: user.movies,
+    token: user.token,
+    tokenExp: user.tokenExp,
+    role: user.role,
+  };
+  return user;
 };
 
 // Schema method used to find user by token.
 // It will check if the token is still valid and find the user
-userSchema.statics.findByToken = function (token, cb) {
-  let User = this;
+userSchema.statics.findByToken = async function (token) {
+  const User = this;
 
   // Decode token.
-  jwt.verify(token, process.env.JWTSECRET, (err, decoded) => {
-    // If token is expired, error will be 'jwt expired' error.
-    if (err) return cb(err);
+  // If token is expired, error will be 'jwt expired' error.
+  const decoded = jwt.verify(token, process.env.JWTSECRET);
 
-    // If token is still valid, find the user.
-    User.findOne(
-      { _id: decoded.data, token: token },
-      { projection: { password: 0 } },
-      function (err, user) {
-        if (err) return cb(err);
-        cb(null, user);
-      }
-    );
-  });
+  // If token is still valid, find the user.
+  const user = await User.findOne(
+    { _id: decoded.data, token: token },
+    { password: 0 }
+  );
+
+  return user;
 };
 
 export const User = mongoose.model("User", userSchema);

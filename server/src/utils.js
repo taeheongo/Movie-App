@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { User } from "./dataSources/models/User";
+import { AuthenticationError } from "apollo-server";
 
 export const isEmail = (email) => {
   if (typeof email !== "string") {
@@ -14,7 +15,7 @@ export const isEmail = (email) => {
 };
 
 export const connectToDB = (username, password) => {
-  const mongodbURI = `mongodb+srv://${username}:${password}@cluster-for-movie-app.3qupe.mongodb.net/user?retryWrites=true&w=majority`;
+  const mongodbURI = `mongodb+srv://${username}:${password}@cluster-for-movie-app.3qupe.mongodb.net/movie?retryWrites=true&w=majority`;
 
   const DBConnectionSuccess = () =>
     console.log(`🚀 Connected to Mongodb Atlas Cluster`);
@@ -22,6 +23,7 @@ export const connectToDB = (username, password) => {
   const DBConnectonFailed = (error) => console.error(error);
 
   //connect to mongodb atlas cluster
+
   mongoose
     .connect(mongodbURI, {
       useNewUrlParser: true,
@@ -33,29 +35,23 @@ export const connectToDB = (username, password) => {
     .catch(DBConnectonFailed);
 };
 
-export const auth = (token) => {
-  console.log("token:", token);
+export const auth = async (token) => {
   if (!token) {
-    return { user: null, message: "no token detected" };
+    return null;
   }
 
-  User.findBytoken(token, (error, user) => {
-    console.log(error, user);
-    if (error) {
-      if (error.message === "jwt expired") {
-        return { message: "token expired", user: null };
-      } else {
-        console.error("findBytoken :", error);
-        return { message: "internal error", user: null };
-      }
-    }
+  let user;
+  try {
+    user = await User.findByToken(token);
 
-    if (!user) {
-      return { message: "check your information", user: null };
-    }
+    if (!user) return null;
 
-    if (user) {
-      return { user };
+    return user;
+  } catch (error) {
+    if (error.message === "jwt expired") {
+      throw AuthenticationError("Login required.");
+    } else {
+      throw error;
     }
-  });
+  }
 };
