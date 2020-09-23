@@ -31,6 +31,7 @@ const server = new ApolloServer({
 
     return { token, movieNames };
   },
+  // All errors will come here to be formatted.
   formatError: (error) => {
     console.error(error);
     let exception = error?.extensions?.exception;

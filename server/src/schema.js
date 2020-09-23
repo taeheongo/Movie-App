@@ -40,6 +40,7 @@ const typeDefs = gql`
     title: String!
     subtitle: String!
     image: String!
+    link: String!
     userRating: Float!
     director: [String]!
     actor: [String]!
