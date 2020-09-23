@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { User } from "./dataSources/models/User";
 import { AuthenticationError } from "apollo-server";
+import axios from "axios";
 
 export const isEmail = (email) => {
   if (typeof email !== "string") {
@@ -54,4 +55,25 @@ export const auth = async (token) => {
       throw error;
     }
   }
+};
+
+export const getMovieNames = async () => {
+  const year = `${new Date().getFullYear()}`;
+  const month = `0${new Date().getMonth() + 1}`.slice(-2);
+  const date = `${new Date().getDate() - 1}`;
+  const yesterday = year + month + date;
+  const KOBIS_URI = `http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?`;
+
+  let { data } = await axios.get(KOBIS_URI, {
+    params: {
+      key: process.env.KOBIS_API_KEY,
+      targetDt: yesterday,
+    },
+  });
+
+  let result = data?.boxOfficeResult?.dailyBoxOfficeList.map(
+    (item) => item.movieNm
+  );
+
+  return result;
 };

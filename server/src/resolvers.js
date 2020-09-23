@@ -3,34 +3,15 @@ import { isEmail } from "./utils";
 
 export default {
   Query: {
-    getMovie: async (_, { name }, { dataSources }) => {
-      try {
-        const response = await dataSources.MovieAPI.getMovie(name);
-        const { total, start, display, items } = response;
+    getMovies: async (_, { name, limit }, { dataSources }) => {
+      const response = await dataSources.MovieAPI.getMovies(name, limit);
 
-        items.map((item) => {
-          const actors = item.actor.split("|");
-          actors.splice(actors.length - 1, 1);
-          item.actor = actors;
-
-          const directors = item.director.split("|");
-          directors.splice(directors.length - 1, 1);
-          item.director = directors;
-
-          return item;
-        });
-
-        return {
-          total,
-          start,
-          display,
-          movies: items,
-          hasMore: true,
-        };
-      } catch (error) {
-        console.error("GetMovie Error: \n", error);
-        throw error;
-      }
+      return response;
+    },
+    getHotMovies: async (_, __, { dataSources }) => {
+      let movies = await dataSources.MovieAPI.getHotMovies();
+      console.log(movies);
+      return movies;
     },
   },
   Mutation: {

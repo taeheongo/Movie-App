@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+const { ObjectId } = mongoose.Schema.Types;
 
 const saltRounds = 10;
 
@@ -25,7 +26,7 @@ const userSchema = mongoose.Schema({
     default: 0,
   },
   movies: {
-    type: Array,
+    type: [{ type: ObjectId, ref: "Movie" }],
     default: [],
   },
   token: String,

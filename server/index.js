@@ -3,7 +3,7 @@ import resolvers from "./src/resolvers";
 import typeDefs from "./src/schema";
 import dotenv from "dotenv";
 import dataSources from "./src/dataSources";
-import { connectToDB } from "./src/utils";
+import { connectToDB, getMovieNames } from "./src/utils";
 import { GraphQLDate } from "graphql-iso-date";
 import { GraphQLError } from "graphql";
 
@@ -18,6 +18,10 @@ const resolveFunctions = {
   Date: GraphQLDate,
 };
 
+// get the latest movies
+let movieNames = [];
+getMovieNames().then((response) => (movieNames = response));
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -25,9 +29,10 @@ const server = new ApolloServer({
   context: ({ req }) => {
     let token = req.headers.auth || "";
 
-    return { token };
+    return { token, movieNames };
   },
   formatError: (error) => {
+    console.error(error);
     let exception = error?.extensions?.exception;
 
     if (exception) {

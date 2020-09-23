@@ -3,8 +3,8 @@ import { gql } from "apollo-server";
 const typeDefs = gql`
   type Query {
     me: User!
-    getMovie(name: String!): fetchResult!
-    getMovies: fetchResult!
+    getMovies(name: String!, limit: Int): fetchResult!
+    getHotMovies: [Movie]!
     getMoviesByGenre(genre: String): fetchResult!
     getMoviesByYear(yearFrom: Int!, yearTo: Int): fetchResult!
   }
@@ -39,7 +39,7 @@ const typeDefs = gql`
   type Movie {
     title: String!
     subtitle: String!
-    link: String!
+    image: String!
     userRating: Float!
     director: [String]!
     actor: [String]!
