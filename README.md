@@ -1,6 +1,8 @@
 # Movie App 2020 ver.
 
-## This application is the fullstack app using Apollo and Graphql.
+## This application is the fullstack Movie app.
+
+    The finished product link :
 
 ## Technologies
 
@@ -14,7 +16,13 @@
 - [x] Express.js
 - [x] AWS(EC2)
 - [x] MongoDB(Atlas)
-  <br/><br/><br/>
+      <br/><br/><br/>
+
+## used APIs.
+
+- [KOBIS](http://www.kobis.or.kr/kobisopenapi/)
+- [GoogleYoutbeV3](https://developers.google.com/youtube)
+- [NaverSearch](https://developers.naver.com/docs/search/movie/)
 
 ## How to use
 
