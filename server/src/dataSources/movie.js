@@ -1,8 +1,4 @@
 import { RESTDataSource } from "apollo-datasource-rest";
-import dotenv from "dotenv";
-
-// loads environment variables from a .env file into process.env
-dotenv.config();
 
 class MovieAPI extends RESTDataSource {
   constructor() {
@@ -35,6 +31,7 @@ class MovieAPI extends RESTDataSource {
 
       // remove <b>, </b> in item.title
       item.title = item.title.replace(/<b>(.*?)<\/b>/, "$1");
+      item.subtitle = item.subtitle.replace(/<b>(.*?)<\/b>/, "$1");
 
       return item;
     });
@@ -49,6 +46,7 @@ class MovieAPI extends RESTDataSource {
   }
 
   async getHotMovies() {
+    // We will use Promise.all to get an array of the asynchronus results.
     const promises = this.context.movieNames.map((name) => {
       return this.getMovies(name, 1);
     });

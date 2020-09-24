@@ -1,5 +1,5 @@
-import { UserInputError } from "apollo-server";
-import { isEmail } from "./utils";
+import { UserInputError, AuthenticationError } from "apollo-server";
+import { isEmail, auth } from "./utils";
 
 export default {
   Query: {
@@ -10,8 +10,17 @@ export default {
     },
     getHotMovies: async (_, __, { dataSources }) => {
       let movies = await dataSources.MovieAPI.getHotMovies();
-      console.log(movies);
+
       return movies;
+    },
+    me: async (_, __, { token }) => {
+      let user = await auth(token);
+
+      if (!user) {
+        throw new AuthenticationError("You are not logged in.");
+      }
+
+      return user;
     },
   },
   Mutation: {
