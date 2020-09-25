@@ -3,12 +3,17 @@ import { isEmail, auth } from "./utils";
 
 export default {
   Query: {
-    getMovies: async (_, { name, limit }, { dataSources }) => {
+    movie: async (_, { name }, { dataSources }) => {
+      const movie = await dataSources.MovieAPI.getMovie(name);
+
+      return movie;
+    },
+    movies: async (_, { name, limit }, { dataSources }) => {
       const response = await dataSources.MovieAPI.getMovies(name, limit);
 
       return response;
     },
-    getHotMovies: async (_, __, { dataSources }) => {
+    hotMovies: async (_, __, { dataSources }) => {
       let movies = await dataSources.MovieAPI.getHotMovies();
 
       return movies;

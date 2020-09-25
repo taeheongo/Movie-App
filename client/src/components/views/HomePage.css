@@ -1,0 +1,62 @@
+.hotmovies-container {
+  width: 70%;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(5rem, 1fr));
+  gap: 1.2rem;
+  margin: auto;
+  justify-content: center;
+  grid-auto-rows: auto;
+}
+
+.home-logo {
+  height: 20rem;
+  width: 20rem;
+  margin-bottom: 1rem;
+}
+
+img:hover {
+  cursor: pointer;
+}
+
+.home-title {
+  font-size: 3rem;
+  font-family: "Shadows Into Light", cursive;
+  margin-bottom: 6rem;
+}
+
+@media screen and (min-width: 769px) and (max-width: 1200px) {
+  .hotmovies-container {
+    width: 80%;
+    grid-template-columns: repeat(3, 250px);
+    gap: 1.1rem;
+  }
+
+  .home-title {
+    font-size: 1.8rem;
+    margin-bottom: 5rem;
+  }
+
+  .home-logo {
+    height: 15rem;
+    width: 15rem;
+    margin-bottom: 3.5rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .hotmovies-container {
+    width: 80%;
+    grid-template-columns: repeat(2, minmax(100px, 1fr));
+    gap: 1rem;
+  }
+
+  .home-title {
+    font-size: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .home-logo {
+    height: 10rem;
+    width: 10rem;
+  }
+}

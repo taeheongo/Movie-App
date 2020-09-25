@@ -5,8 +5,9 @@ const typeDefs = gql`
 
   type Query {
     me: User!
-    getMovies(name: String!, limit: Int): fetchResult!
-    getHotMovies: [Movie]!
+    movie(name: String!): Movie!
+    movies(name: String!, limit: Int): fetchResult!
+    hotMovies: [Movie]!
   }
 
   type User {
@@ -28,6 +29,7 @@ const typeDefs = gql`
     director: [String]!
     actor: [String]!
     pubDate: String!
+    videoId: String
     _id: String
   }
 

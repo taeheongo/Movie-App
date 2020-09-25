@@ -18,10 +18,6 @@ const resolveFunctions = {
   Date: GraphQLDate,
 };
 
-// get the latest movies
-let movieNames = [];
-getMovieNames().then((response) => (movieNames = response));
-
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -29,7 +25,7 @@ const server = new ApolloServer({
   context: ({ req }) => {
     let token = req.headers.auth || "";
 
-    return { token, movieNames };
+    return { token };
   },
   // All errors will come here to be formatted.
   formatError: (error) => {

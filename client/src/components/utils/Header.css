@@ -1,0 +1,69 @@
+.header {
+  display: flex;
+  height: 4rem;
+  justify-content: space-between;
+  align-self: center;
+  margin: auto;
+  margin-bottom: 1rem;
+  width: 75%;
+  border-bottom: 0.08px solid rgba(0, 0, 0, 0.15);
+  padding: 0 1rem;
+}
+
+.header *:hover {
+  cursor: pointer;
+}
+
+.menu {
+  height: 100%;
+  display: flex;
+}
+
+.menu-item {
+  border-bottom: transparent;
+  transition: border-bottom 0.5s linear;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  font-size: 1.2rem;
+}
+
+.menu-item:hover {
+  border-bottom: 1.5px solid #000;
+}
+
+.menu-item:focus {
+  border-bottom: 1.5px solid #000;
+}
+
+.menu-logo {
+  height: 2rem;
+  width: 2rem;
+}
+
+@media screen and (min-width: 769px) and (max-width: 1200px) {
+  .menu-item {
+    padding: 0 0.7rem;
+  }
+  .menu-item {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .header {
+    height: 3rem;
+    width: 90%;
+    padding: 0;
+  }
+
+  .menu-logo {
+    height: 1.2rem;
+    width: 1.2rem;
+  }
+
+  .menu-item {
+    font-size: 0.8rem;
+    padding: 0 0.5rem;
+  }
+}

@@ -1,32 +1,29 @@
 import React from "react";
-import logo from "./logo.svg";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import HomePage from "./components/views/HomePage";
+import MoviePage from "./components/views/MoviePage";
+import FavorPage from "./components/views/FavorPage";
+import ProfilePage from "./components/views/ProfilePage";
+import Header from "./components/utils/Header";
+import auth from "./components/hoc/auth";
+import Footer from "./components/utils/Footer";
+
 import "./App.css";
+import "antd/dist/antd.css";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <iframe
-          id="ytplayer"
-          type="text/html"
-          style={{}}
-          src="https://www.youtube.com/embed/JuNz4Zpuqys"
-          frameborder="0"
-          allowFullScreen="1"
-        ></iframe>
-      </header>
+      <Router>
+        <Header />
+        <Switch>
+          <Route exact path="/" component={auth(HomePage)} />
+          <Route path="/movie/:title" component={auth(MoviePage)} />
+          <Route exact path="/favorites" component={auth(FavorPage)} />
+          <Route exact path="/profile" component={auth(ProfilePage)} />
+        </Switch>
+        <Footer />
+      </Router>
     </div>
   );
 }
