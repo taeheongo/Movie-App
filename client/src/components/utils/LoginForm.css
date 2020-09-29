@@ -1,0 +1,25 @@
+.lognform {
+  margin: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.github-login {
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  height: 2rem;
+}
+
+.github-login img {
+  height: 20px;
+}
+
+.github-login:hover {
+  cursor: pointer;
+}
+
+.ant-modal-footer {
+  display: none !important;
+}

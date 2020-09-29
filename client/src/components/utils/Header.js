@@ -1,5 +1,5 @@
 import React from "react";
-import Login from "./Login";
+import LoginButton from "./LoginButton";
 import { Link, withRouter } from "react-router-dom";
 
 import "./Header.css";
@@ -14,14 +14,18 @@ const Header = () => {
           </Link>
         </div>
         <div className="menu-item">
-          <a href="https://github.com/taeheongo/Movie-App" target="_blank">
+          <a
+            href="https://github.com/taeheongo/Movie-App"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
             <img src="github.png" alt="github" className="menu-logo" />
           </a>
         </div>
       </div>
       <div className="menu">
         <div className="menu-item">
-          <Login />
+          <LoginButton />
         </div>
       </div>
     </header>

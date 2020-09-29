@@ -3,8 +3,6 @@ import mongoose from "mongoose";
 const movieSchema = mongoose.Schema({
   title: {
     type: String,
-    maxlength: 30,
-    trim: true,
     required: true,
   },
   subtitle: {
@@ -15,8 +13,8 @@ const movieSchema = mongoose.Schema({
     type: [String],
     required: true,
   },
-  director: {
-    type: String,
+  directors: {
+    type: [String],
     required: true,
   },
   image: {
@@ -25,6 +23,10 @@ const movieSchema = mongoose.Schema({
   },
   rating: {
     type: Number,
+    required: true,
+  },
+  trailor: {
+    type: String,
     required: true,
   },
   pubDate: {

@@ -29,6 +29,11 @@ const userSchema = mongoose.Schema({
     type: [{ type: ObjectId, ref: "Movie" }],
     default: [],
   },
+  cart: {
+    type: [{ type: ObjectId, ref: "Movie" }],
+    default: [],
+  },
+  githubId: String,
   token: String,
   tokenExp: Date,
 });
@@ -85,6 +90,7 @@ userSchema.methods.generateToken = async function () {
     email: user.email,
     username: user.username,
     movies: user.movies,
+    cart: user.cart,
     token: user.token,
     tokenExp: user.tokenExp,
     role: user.role,

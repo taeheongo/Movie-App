@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import { User } from "./dataSources/models/User";
 import { AuthenticationError } from "apollo-server";
-import axios from "axios";
 
 export const isEmail = (email) => {
   if (typeof email !== "string") {
@@ -14,15 +13,22 @@ export const isEmail = (email) => {
     return false;
   }
 };
-
-export const connectToDB = (username, password) => {
-  const mongodbURI = `mongodb+srv://${username}:${password}@cluster-for-movie-app.3qupe.mongodb.net/movie?retryWrites=true&w=majority`;
+let count = 0;
+export const connectToDB = () => {
+  const mongodbURI = process.env.MONGODB_URI;
 
   const DBConnectionSuccess = () =>
     console.log(`🚀 Connected to Mongodb Atlas Cluster`);
 
-  const DBConnectonFailed = (error) => console.error(error);
-
+  const DBConnectonFailed = (error) => {
+    console.error(error);
+    count++;
+    if (count < 3) {
+      connectToDB();
+    } else {
+      throw error;
+    }
+  };
   //connect to mongodb atlas cluster
 
   mongoose
@@ -55,4 +61,8 @@ export const auth = async (token) => {
       throw error;
     }
   }
+};
+
+export const validPassword = (password) => {
+  return /(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?!.*[^a-zA-Z0-9])/.test(password);
 };

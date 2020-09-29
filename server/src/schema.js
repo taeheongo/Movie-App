@@ -5,46 +5,48 @@ const typeDefs = gql`
 
   type Query {
     me: User!
-    movie(name: String!): Movie!
-    movies(name: String!, limit: Int): fetchResult!
-    hotMovies: [Movie]!
+    movie(movieId: ID!): Movie!
+    movies(movieIds: [ID]!): [Movie]!
+    currentMovies: [Movie]!
   }
 
   type User {
-    _id: String!
+    _id: ID!
     username: String!
     email: String!
     movies: [Movie]!
     role: Int!
-    token: String
-    tokenExp: Date
+    token: String!
+    cart: [Movie]!
   }
 
   type Movie {
     title: String!
     subtitle: String!
     image: String!
-    link: String!
-    userRating: Float!
-    director: [String]!
-    actor: [String]!
-    pubDate: String!
-    videoId: String
-    _id: String
+    rating: Float!
+    directors: [String]!
+    actors: [String]!
+    pubDate: String
+    trailor: String!
+    _id: ID!
   }
 
   type fetchResult {
-    total: Int
-    start: Int
-    display: Int
-    hasMore: Boolean
-    movies: [Movie]
+    skip: Int!
+    limit: Int!
+    display: Int!
+    hasMore: Boolean!
+    movies: [Movie]!
   }
 
   type Mutation {
     register(email: String!, username: String!, password: String!): Boolean!
     login(email: String!, password: String!): User!
     logout: Boolean!
+    book(movieIds: [ID]!): Boolean!
+    addOrRemoveItem(movieIds: [ID]!): Boolean!
+    test: Boolean!
   }
 `;
 

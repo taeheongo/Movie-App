@@ -1,29 +1,26 @@
 import { UserInputError, AuthenticationError } from "apollo-server";
 import { isEmail, auth } from "./utils";
+import axios from "axios";
 
 export default {
   Query: {
-    movie: async (_, { name }, { dataSources }) => {
-      const movie = await dataSources.MovieAPI.getMovie(name);
+    movie: async (_, { movieId }, { dataSources }) => {
+      const movie = await dataSources.MovieAPI.getMovie(movieId);
 
       return movie;
     },
-    movies: async (_, { name, limit }, { dataSources }) => {
-      const response = await dataSources.MovieAPI.getMovies(name, limit);
+    movies: async (_, { movieIds }, { dataSources }) => {
+      const response = await dataSources.MovieAPI.getMovies(movieIds);
 
       return response;
     },
-    hotMovies: async (_, __, { dataSources }) => {
-      let movies = await dataSources.MovieAPI.getHotMovies();
+    currentMovies: async (_, __, { dataSources }) => {
+      let movies = await dataSources.MovieAPI.getCurrentMovies();
 
       return movies;
     },
     me: async (_, __, { token }) => {
       let user = await auth(token);
-
-      if (!user) {
-        throw new AuthenticationError("You are not logged in.");
-      }
 
       return user;
     },
@@ -52,9 +49,28 @@ export default {
       return user;
     },
     logout: async (_, __, { dataSources }) => {
-      let isLoggedOut = dataSources.UserAPI.logout();
+      let isLoggedOut = await dataSources.UserAPI.logout();
 
       return isLoggedOut;
+    },
+    book: async (_, { movieIds }, { dataSources }) => {
+      let isBooked = await dataSources.UserAPI.book(movieIds);
+
+      return isBooked;
+    },
+    addOrRemoveItem: async (_, { movieIds }, { dataSources }) => {
+      let isSucceeded = await dataSources.UserAPI.addToCartOrRemoveFromCart(
+        movieIds
+      );
+
+      return isSucceeded;
+    },
+    test: async () => {
+      let response = await axios.get(
+        "https://github.com/login/oauth/authorize?client_id=7da9097be48a84356d99"
+      );
+      console.log(response);
+      return true;
     },
   },
 };

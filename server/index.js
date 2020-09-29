@@ -3,7 +3,7 @@ import resolvers from "./src/resolvers";
 import typeDefs from "./src/schema";
 import dotenv from "dotenv";
 import dataSources from "./src/dataSources";
-import { connectToDB, getMovieNames } from "./src/utils";
+import { connectToDB } from "./src/utils";
 import { GraphQLDate } from "graphql-iso-date";
 import { GraphQLError } from "graphql";
 
@@ -11,14 +11,15 @@ import { GraphQLError } from "graphql";
 dotenv.config();
 
 // connect to mongodb atalas cluster
-const { DB_USERNAME, DB_PASSWORD } = process.env;
-connectToDB(DB_USERNAME, DB_PASSWORD);
-
+connectToDB();
 const resolveFunctions = {
   Date: GraphQLDate,
 };
 
 const server = new ApolloServer({
+  cors: {
+    origin: "http://localhost:3000",
+  },
   typeDefs,
   resolvers,
   dataSources,
