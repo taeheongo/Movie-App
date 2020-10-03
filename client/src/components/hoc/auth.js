@@ -46,12 +46,16 @@ export default (WrappedComponent, option, adminRoute = false) => {
 
   const HocComponent = ({ ...props }) => {
     const { data, loading, error } = useQuery(Me);
-    console.error(error);
+    console.log(data);
+    if (error) {
+      console.error(error);
+    }
 
     useEffect(() => {
       if (data && data.me) {
         const { role } = data.me;
 
+        // trun isLoggedIn true
         client.cache.modify({
           fields: {
             isLoggedIn() {
@@ -59,6 +63,9 @@ export default (WrappedComponent, option, adminRoute = false) => {
             },
           },
         });
+
+        // save the token
+        localStorage.setItem("token", data.me.token);
 
         if (option === 0) {
           props.history.push("/");
@@ -72,7 +79,7 @@ export default (WrappedComponent, option, adminRoute = false) => {
       } else {
         if (option === 1) {
           alert("Login required.");
-          props.history.push("/login");
+          props.history.push("/");
         }
       }
     }, [loading]);

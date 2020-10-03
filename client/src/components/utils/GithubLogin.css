@@ -1,0 +1,25 @@
+.github-login {
+  width: 100%;
+  background-color: #000;
+  height: 2rem;
+}
+
+.github-login * {
+  color: #ffffff;
+}
+
+.github-login a {
+  width: 100%;
+}
+
+.github-login a:hover {
+  color: #fff;
+}
+
+.github-login img {
+  height: 20px;
+}
+
+.github-login:hover {
+  cursor: pointer;
+}

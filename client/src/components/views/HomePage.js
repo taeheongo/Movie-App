@@ -1,8 +1,10 @@
-import React from "react";
-import { gql, useQuery } from "@apollo/client";
+import React, { useEffect } from "react";
+import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import Logo from "../utils/Logo";
 import Movie from "../utils/Movie";
 import Loading from "../utils/Loading";
+import GithubLogin from "../utils/GithubLogin";
+import axios from "axios";
 
 import "./HomePage.css";
 
@@ -19,8 +21,6 @@ export const getCurrentMovies = gql`
 
 const HomePage = ({ history }) => {
   const { data, loading, error } = useQuery(getCurrentMovies);
-
-  console.log(data, loading, error);
 
   return (
     <main style={{ margin: "auto", paddingBottom: "3rem" }}>

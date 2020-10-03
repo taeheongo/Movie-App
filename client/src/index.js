@@ -10,11 +10,29 @@ import {
 } from "@apollo/client";
 import { typeDefs } from "./schema";
 
+const cookieParser = (cookies) => {
+  let cookieObject = {};
+
+  cookies.split(";").forEach((cookie) => {
+    let parsedCookie = cookie.trim().split("=");
+    cookieObject[parsedCookie[0]] = parsedCookie[1];
+  });
+
+  return cookieObject;
+};
+
+console.log(
+  localStorage.getItem("token") || cookieParser(document.cookie)["token"]
+);
+
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
-    headers: { authorization: localStorage.getItem("token") },
-    uri: "http://localhost:4001/graphql",
+    headers: {
+      auth:
+        localStorage.getItem("token") || cookieParser(document.cookie)["token"],
+    },
+    uri: "http://localhost:4000/graphql",
   }),
   typeDefs,
 });

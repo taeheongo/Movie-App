@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { User } from "./dataSources/models/User";
-import { AuthenticationError } from "apollo-server";
+import { AuthenticationError } from "apollo-server-express";
 
 export const isEmail = (email) => {
   if (typeof email !== "string") {
@@ -56,7 +56,7 @@ export const auth = async (token) => {
     return user;
   } catch (error) {
     if (error.message === "jwt expired") {
-      throw AuthenticationError("Login required.");
+      throw new AuthenticationError("Login required.");
     } else {
       throw error;
     }

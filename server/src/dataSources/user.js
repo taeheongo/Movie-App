@@ -1,8 +1,9 @@
 import { DataSource } from "apollo-datasource";
-import { ApolloError, AuthenticationError } from "apollo-server";
+import { ApolloError, AuthenticationError } from "apollo-server-express";
 import { User } from "./models/User";
 import { auth } from "../utils";
 import { Movie } from "./models/Movie";
+import Axios from "axios";
 
 class UserAPI extends DataSource {
   constructor() {

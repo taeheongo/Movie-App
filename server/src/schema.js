@@ -4,10 +4,16 @@ const typeDefs = gql`
   scalar Date
 
   type Query {
-    me: User!
+    me: User
     movie(movieId: ID!): Movie!
     movies(movieIds: [ID]!): [Movie]!
     currentMovies: [Movie]!
+  }
+
+  type Token {
+    access_token: String!
+    scope: String
+    token_type: String
   }
 
   type User {
@@ -46,7 +52,6 @@ const typeDefs = gql`
     logout: Boolean!
     book(movieIds: [ID]!): Boolean!
     addOrRemoveItem(movieIds: [ID]!): Boolean!
-    test: Boolean!
   }
 `;
 

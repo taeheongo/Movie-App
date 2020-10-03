@@ -1,4 +1,5 @@
-import { ApolloServer, ApolloError } from "apollo-server";
+import express from "express";
+import { ApolloServer, ApolloError } from "apollo-server-express";
 import resolvers from "./src/resolvers";
 import typeDefs from "./src/schema";
 import dotenv from "dotenv";
@@ -6,6 +7,7 @@ import dataSources from "./src/dataSources";
 import { connectToDB } from "./src/utils";
 import { GraphQLDate } from "graphql-iso-date";
 import { GraphQLError } from "graphql";
+import userRouter from "./src/routes/user";
 
 // loads environment variables from a .env file into process.env
 dotenv.config();
@@ -17,9 +19,6 @@ const resolveFunctions = {
 };
 
 const server = new ApolloServer({
-  cors: {
-    origin: "http://localhost:3000",
-  },
   typeDefs,
   resolvers,
   dataSources,
@@ -53,6 +52,13 @@ const server = new ApolloServer({
   resolveFunctions,
 });
 
-server.listen(4001).then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
-});
+const app = express();
+server.applyMiddleware({ app });
+
+// setPrxoxy(app);
+
+app.use("/api/user", userRouter);
+
+app.listen({ port: 4000 }, () =>
+  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+);

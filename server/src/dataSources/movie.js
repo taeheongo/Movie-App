@@ -1,5 +1,5 @@
 import { DataSource } from "apollo-datasource";
-import { ApolloError } from "apollo-server";
+import { ApolloError } from "apollo-server-express";
 import { Movie } from "./models/Movie";
 
 class MovieAPI extends DataSource {

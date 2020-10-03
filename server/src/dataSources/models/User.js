@@ -19,7 +19,6 @@ const userSchema = mongoose.Schema({
   password: {
     type: String,
     minlength: 5,
-    required: true,
   },
   role: {
     type: Number, // 0: client account, 1: administrator account
@@ -42,16 +41,20 @@ userSchema.pre("save", function (next) {
   let user = this;
 
   if (user.isModified("password")) {
-    // Encrypt password
-    bcrypt.genSalt(saltRounds, function (err, salt) {
-      if (err) return next(err);
-
-      bcrypt.hash(user.password, salt, function (err, hash) {
+    if (!user.githubId) {
+      // Encrypt password
+      bcrypt.genSalt(saltRounds, function (err, salt) {
         if (err) return next(err);
-        user.password = hash;
-        next();
+
+        bcrypt.hash(user.password, salt, function (err, hash) {
+          if (err) return next(err);
+          user.password = hash;
+          next();
+        });
       });
-    });
+    } else {
+      next();
+    }
   } else {
     next();
   }
@@ -79,7 +82,7 @@ userSchema.methods.generateToken = async function () {
 
   // Add token and token expiration to user
   user.token = token;
-  const sixHours = Date.now() + 1000 * 60 * 60 * 6;
+  const sixHours = new Date(Date.now() + 1000 * 60 * 60 * 6);
   user.tokenExp = sixHours;
 
   // Save the user

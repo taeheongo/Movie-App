@@ -3,7 +3,7 @@ import "./LoginForm.css";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
+import GithubLogin from "./GithubLogin";
 
 import "./LoginForm.css";
 
@@ -60,11 +60,7 @@ const LoginForm = ({ refreshFunction }) => {
           Or <a href="/">register now!</a>
         </Form.Item>
       </Form>
-      <button onClick={onClick}>
-        <a href="https://github.com/login/oauth/authorize?client_id=7da9097be48a84356d99">
-          login with github
-        </a>
-      </button>
+      <GithubLogin clientId="7da9097be48a84356d99" />
     </div>
   );
 };

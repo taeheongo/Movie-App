@@ -38,20 +38,25 @@ const LoginButton = ({ history }) => {
     setVisible(true);
   };
 
-  const onClickSignUp = () => {
-    history.push("/signup");
-  };
-
   const refreshFunction = ({ email, password }) => {
     login(email, password);
   };
+
+  const onOKHandler = () => setVisible(false);
+
+  const onCancleHandler = () => setVisible(false);
 
   return (
     <div>
       <button className="pure-button" onClick={showModal}>
         Login
       </button>
-      <Modal title="Login" visible={Visible}>
+      <Modal
+        title="Login"
+        visible={Visible}
+        onOk={onOKHandler}
+        onCancel={onCancleHandler}
+      >
         <LoginForm refreshFunction={refreshFunction} />
       </Modal>
     </div>

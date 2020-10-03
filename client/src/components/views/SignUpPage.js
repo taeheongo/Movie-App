@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import Axios from "axios";
+import React, { useState, useRef, useEffect } from "react";
 
 const SignUpPage = ({ refreshFunction }) => {
   const [Email, setEmail] = useState("");

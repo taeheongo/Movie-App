@@ -1,6 +1,5 @@
-import { UserInputError, AuthenticationError } from "apollo-server";
+import { UserInputError, AuthenticationError } from "apollo-server-express";
 import { isEmail, auth } from "./utils";
-import axios from "axios";
 
 export default {
   Query: {
@@ -20,6 +19,7 @@ export default {
       return movies;
     },
     me: async (_, __, { token }) => {
+      console.log("token", token);
       let user = await auth(token);
 
       return user;
@@ -46,7 +46,9 @@ export default {
 
       let user = await dataSources.UserAPI.login(email, password);
 
-      return user;
+      return {
+        user,
+      };
     },
     logout: async (_, __, { dataSources }) => {
       let isLoggedOut = await dataSources.UserAPI.logout();
@@ -64,13 +66,6 @@ export default {
       );
 
       return isSucceeded;
-    },
-    test: async () => {
-      let response = await axios.get(
-        "https://github.com/login/oauth/authorize?client_id=7da9097be48a84356d99"
-      );
-      console.log(response);
-      return true;
     },
   },
 };

@@ -25,3 +25,11 @@ body * {
 button:focus {
   outline: none;
 }
+
+.pure-button a {
+  color: #000;
+}
+
+.pure-button a:hover {
+  color: #000;
+}
