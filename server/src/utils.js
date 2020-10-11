@@ -13,24 +13,16 @@ export const isEmail = (email) => {
     return false;
   }
 };
-let count = 0;
+
 export const connectToDB = () => {
   const mongodbURI = process.env.MONGODB_URI;
 
   const DBConnectionSuccess = () =>
     console.log(`🚀 Connected to Mongodb Atlas Cluster`);
 
-  const DBConnectonFailed = (error) => {
-    console.error(error);
-    count++;
-    if (count < 3) {
-      connectToDB();
-    } else {
-      throw error;
-    }
-  };
-  //connect to mongodb atlas cluster
+  const DBConnectonFailed = (error) => console.error(error);
 
+  //connect to mongodb atlas cluster
   mongoose
     .connect(mongodbURI, {
       useNewUrlParser: true,

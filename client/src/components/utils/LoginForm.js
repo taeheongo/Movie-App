@@ -1,29 +1,23 @@
 import React from "react";
-import "./LoginForm.css";
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { withRouter } from "react-router-dom";
-import GithubLogin from "./GithubLogin";
 
+import GithubLogin from "./GithubLogin";
 import "./LoginForm.css";
 
-const LoginForm = ({ refreshFunction }) => {
-  const onFinish = (values) => {
-    console.log("Success:", values);
+const LoginForm = ({ login, status }) => {
+  const onFinishHandler = (values) => {
+    const { email, password } = values;
+    login({ variables: { email, password } });
   };
-
-  const onSuccess = (response) => console.log("response: ", response);
-  const onFailure = (response) => console.error("error: ", response);
-
-  const onClick = () => {};
 
   return (
     <div>
       <Form
         name="normal_login"
         className="login-form"
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
+        onFinish={onFinishHandler}
       >
         <Form.Item name="email" rules={[{ required: true }, { type: "email" }]}>
           <Input
@@ -32,21 +26,12 @@ const LoginForm = ({ refreshFunction }) => {
             placeholder="email"
           />
         </Form.Item>
-        <Form.Item name="password" rules={[{ required: true }]}>
+        <Form.Item name="password" rules={[{ required: true, min: 5 }]}>
           <Input
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
             placeholder="password"
           />
-        </Form.Item>
-        <Form.Item style={{ textAlign: "center" }}>
-          <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Remember me</Checkbox>
-          </Form.Item>
-
-          <a className="login-form-forgot" href="/">
-            Forgot password
-          </a>
         </Form.Item>
 
         <Form.Item style={{ textAlign: "center" }}>
@@ -57,10 +42,24 @@ const LoginForm = ({ refreshFunction }) => {
           >
             Log in
           </Button>
-          Or <a href="/">register now!</a>
         </Form.Item>
       </Form>
       <GithubLogin clientId="7da9097be48a84356d99" />
+      <div className="signup-link">
+        Don't have an account? <a href="/signup">Sign Up</a>
+      </div>
+      <span
+        style={{
+          display: "block",
+          color: "red",
+          fontSize: "0.8rem",
+          width: "100%",
+          textAlign: "center",
+          marginTop: "1rem",
+        }}
+      >
+        {status}
+      </span>
     </div>
   );
 };

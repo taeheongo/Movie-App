@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
-import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import React from "react";
+import { gql, useQuery } from "@apollo/client";
+import { Link } from "react-router-dom";
+
 import Logo from "../utils/Logo";
 import Movie from "../utils/Movie";
 import Loading from "../utils/Loading";
-import GithubLogin from "../utils/GithubLogin";
-import axios from "axios";
-
 import "./HomePage.css";
 
 export const getCurrentMovies = gql`
@@ -15,12 +14,17 @@ export const getCurrentMovies = gql`
       title
       subtitle
       image
+      rating
+      directors
+      actors
+      pubDate
+      trailor
     }
   }
 `;
 
 const HomePage = ({ history }) => {
-  const { data, loading, error } = useQuery(getCurrentMovies);
+  const { data } = useQuery(getCurrentMovies);
 
   return (
     <main style={{ margin: "auto", paddingBottom: "3rem" }}>
@@ -29,11 +33,11 @@ const HomePage = ({ history }) => {
       <div className="hotmovies-container">
         {data ? (
           data.currentMovies.map((movie, i) => {
-            const onClick = () => {
-              history.push(`/${movie._id}`);
-            };
-
-            return <Movie key={i} onClick={onClick} {...movie} />;
+            return (
+              <Link key={i} to={`/movie/${movie._id}`}>
+                <Movie {...movie} />;
+              </Link>
+            );
           })
         ) : (
           <Loading />

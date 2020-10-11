@@ -10,34 +10,16 @@ import {
 } from "@apollo/client";
 import { typeDefs } from "./schema";
 
-const cookieParser = (cookies) => {
-  let cookieObject = {};
-
-  cookies.split(";").forEach((cookie) => {
-    let parsedCookie = cookie.trim().split("=");
-    cookieObject[parsedCookie[0]] = parsedCookie[1];
-  });
-
-  return cookieObject;
-};
-
-console.log(
-  localStorage.getItem("token") || cookieParser(document.cookie)["token"]
-);
-
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: new HttpLink({
-    headers: {
-      auth:
-        localStorage.getItem("token") || cookieParser(document.cookie)["token"],
-    },
     uri: "http://localhost:4000/graphql",
+    credentials: "include", // credentials: 'include' if your backend is a different domain.
   }),
   typeDefs,
 });
 
-const IS_LOGGED_IN = gql`
+export const IS_LOGGED_IN = gql`
   query IsUserLoggedIn {
     isLoggedIn @client
   }

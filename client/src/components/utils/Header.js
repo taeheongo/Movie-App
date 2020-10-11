@@ -1,64 +1,22 @@
-import React, { useEffect } from "react";
-import LoginButton from "./LoginButton";
+import React from "react";
 import { Link } from "react-router-dom";
-import {
-  gql,
-  useLazyQuery,
-  useMutation,
-  useApolloClient,
-} from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Badge } from "antd";
 
+import { IS_LOGGED_IN } from "../../index";
+import LoginButton from "./LoginButton";
+import LogoutButton from "./LogoutButton";
 import "./Header.css";
 
-export const GET_IS_LOGGED_IN = gql`
-  query getIsLoggedIn {
-    isLoggedIn @client
-  }
-`;
-
-export const LOG_OUT = gql`
-  mutation logout {
-    logout
-  }
-`;
-
 const Header = ({ history }) => {
-  const client = useApolloClient();
-  const [getIsLoggedIn, isLoggedInResult] = useLazyQuery(GET_IS_LOGGED_IN);
-  const [logout, logoutResult] = useMutation(LOG_OUT, {
-    onCompleted(data) {
-      console.log("oncompleted: ", data);
-      client.cache.modify({
-        fields: {
-          isLoggedIn() {
-            return false;
-          },
-          me() {
-            return null;
-          },
-        },
-      });
-    },
-  });
-  const logoutClickHanlder = () => {
-    localStorage.removeItem("token");
-    logout();
-  };
+  const { data } = useQuery(IS_LOGGED_IN);
 
-  useEffect(() => {
-    getIsLoggedIn();
-  }, []);
-
-  useEffect(() => {
-    if (logoutResult.data) {
-      getIsLoggedIn();
-    }
-  }, [logoutResult.data]);
-
-  const RightMenu = isLoggedInResult.data?.isLoggedIn ? (
+  const RightMenu = data?.isLoggedIn ? (
     <div className="menu">
+      <div className="menu-item">
+        <Link to="/">Home</Link>
+      </div>
       <div className="menu-item">
         <Link to="/cart">
           <Badge count={5}>
@@ -70,15 +28,19 @@ const Header = ({ history }) => {
         <Link to="/profile">Profile</Link>
       </div>
       <div className="menu-item">
-        <button className="pure-button" onClick={logoutClickHanlder}>
-          Logout
-        </button>
+        <LogoutButton />
       </div>
     </div>
   ) : (
     <div className="menu">
       <div className="menu-item">
+        <Link to="/">Home</Link>
+      </div>
+      <div className="menu-item">
         <LoginButton />
+      </div>
+      <div className="menu-item">
+        <Link to="/signup">Sign Up</Link>
       </div>
     </div>
   );

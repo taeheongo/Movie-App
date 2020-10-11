@@ -8,6 +8,8 @@ import { connectToDB } from "./src/utils";
 import { GraphQLDate } from "graphql-iso-date";
 import { GraphQLError } from "graphql";
 import userRouter from "./src/routes/user";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
 // loads environment variables from a .env file into process.env
 dotenv.config();
@@ -22,10 +24,9 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   dataSources,
-  context: ({ req }) => {
-    let token = req.headers.auth || "";
-
-    return { token };
+  context: ({ req, res }) => {
+    let token = req.cookies?.token || "";
+    return { token, res };
   },
   // All errors will come here to be formatted.
   formatError: (error) => {
@@ -53,11 +54,21 @@ const server = new ApolloServer({
 });
 
 const app = express();
-server.applyMiddleware({ app });
-
-// setPrxoxy(app);
+// enable cors
+var corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true, // <-- REQUIRED backend setting
+};
+app.use(cors(corsOptions));
+app.use(cookieParser());
+server.applyMiddleware({ app, cors: false });
 
 app.use("/api/user", userRouter);
+
+app.use(function (err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send("Internal serer error");
+});
 
 app.listen({ port: 4000 }, () =>
   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)

@@ -10,16 +10,10 @@ const typeDefs = gql`
     currentMovies: [Movie]!
   }
 
-  type Token {
-    access_token: String!
-    scope: String
-    token_type: String
-  }
-
   type User {
     _id: ID!
     username: String!
-    email: String!
+    email: String
     movies: [Movie]!
     role: Int!
     token: String!
@@ -27,28 +21,25 @@ const typeDefs = gql`
   }
 
   type Movie {
-    title: String!
-    subtitle: String!
-    image: String!
-    rating: Float!
+    title: String
+    subtitle: String
+    image: String
+    rating: Float
     directors: [String]!
     actors: [String]!
     pubDate: String
-    trailor: String!
+    trailor: String
     _id: ID!
   }
 
-  type fetchResult {
-    skip: Int!
-    limit: Int!
-    display: Int!
-    hasMore: Boolean!
-    movies: [Movie]!
+  type AuthResult {
+    success: Boolean!
+    message: String
   }
 
   type Mutation {
-    register(email: String!, username: String!, password: String!): Boolean!
-    login(email: String!, password: String!): User!
+    register(email: String!, username: String!, password: String!): AuthResult!
+    login(email: String!, password: String!): AuthResult
     logout: Boolean!
     book(movieIds: [ID]!): Boolean!
     addOrRemoveItem(movieIds: [ID]!): Boolean!

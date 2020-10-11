@@ -1,0 +1,74 @@
+.movie-section {
+  display: flex;
+  justify-content: space-between;
+  width: 70%;
+  margin: auto;
+  flex-wrap: wrap;
+  max-width: 800px;
+}
+
+.movie-title {
+  font-size: 3rem;
+  font-style: italic;
+}
+
+.movie-info {
+  margin: auto;
+  width: 50%;
+  min-width: 230px;
+}
+
+.movie-info-item {
+  font-size: 2rem;
+  text-align: left;
+  font-style: italic;
+}
+
+.movie-poster {
+  margin: auto;
+  width: 50%;
+  min-width: 230px;
+  max-width: 300px;
+}
+
+.movie-preview {
+  margin-top: 4rem;
+  font-style: italic;
+}
+
+.movie-preview h6 {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.addtocart-button {
+  border: transparent;
+  color: #fff;
+  background-color: #000;
+  font-size: 2rem;
+  border-radius: 10px;
+  width: 100px;
+  margin-top: 1rem;
+}
+
+.addtocart-button:hover {
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .movie-section {
+    width: 90%;
+    margin: auto;
+  }
+
+  .movie-info-item {
+    font-size: 1rem;
+    text-align: left;
+  }
+
+  .movie-title {
+    font-size: 2rem;
+    font-style: italic;
+    text-align: center;
+  }
+}

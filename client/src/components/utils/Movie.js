@@ -3,9 +3,9 @@ import { Card } from "antd";
 
 const { Meta } = Card;
 
-function Movie({ title, image, subtitle, onClick }) {
+function Movie({ title, image, subtitle }) {
   return (
-    <div onClick={onClick}>
+    <div>
       <Card
         hoverable
         style={{ height: "100%" }}

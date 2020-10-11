@@ -20,11 +20,11 @@ export const USER_FRAGMENT = gql`
     _id
     username
     email
+    role
+    token
     movies {
       ...movieFragment
     }
-    role
-    token
     cart {
       ...movieFragment
     }
@@ -45,17 +45,13 @@ export default (WrappedComponent, option, adminRoute = false) => {
   const client = useApolloClient();
 
   const HocComponent = ({ ...props }) => {
-    const { data, loading, error } = useQuery(Me);
-    console.log(data);
-    if (error) {
-      console.error(error);
-    }
+    const { data } = useQuery(Me);
+    console.log("me:", data);
 
     useEffect(() => {
       if (data && data.me) {
         const { role } = data.me;
-
-        // trun isLoggedIn true
+        // set isLoggedIn true
         client.cache.modify({
           fields: {
             isLoggedIn() {
@@ -63,9 +59,6 @@ export default (WrappedComponent, option, adminRoute = false) => {
             },
           },
         });
-
-        // save the token
-        localStorage.setItem("token", data.me.token);
 
         if (option === 0) {
           props.history.push("/");
@@ -82,7 +75,7 @@ export default (WrappedComponent, option, adminRoute = false) => {
           props.history.push("/");
         }
       }
-    }, [loading]);
+    }, [data, props.history]);
 
     return <WrappedComponent {...props} user={data?.me} />;
   };

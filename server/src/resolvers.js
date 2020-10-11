@@ -19,7 +19,6 @@ export default {
       return movies;
     },
     me: async (_, __, { token }) => {
-      console.log("token", token);
       let user = await auth(token);
 
       return user;
@@ -31,24 +30,22 @@ export default {
         throw new UserInputError("Invalid email format");
       }
 
-      const isSucceeded = await dataSources.UserAPI.register(
+      const result = await dataSources.UserAPI.register(
         email,
         username,
         password
       );
 
-      return isSucceeded;
+      return result;
     },
     login: async (_, { email, password }, { dataSources }) => {
       if (!isEmail(email)) {
-        throw new UserInputError("Invalid email format");
+        return false;
       }
 
-      let user = await dataSources.UserAPI.login(email, password);
+      const result = await dataSources.UserAPI.login(email, password);
 
-      return {
-        user,
-      };
+      return result;
     },
     logout: async (_, __, { dataSources }) => {
       let isLoggedOut = await dataSources.UserAPI.logout();

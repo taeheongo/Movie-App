@@ -1,6 +1,6 @@
 import React from "react";
 
-const Logo = ({ className, history }) => {
+const Logo = ({ className }) => {
   return <img src="logo.png" alt="logo" className={className} />;
 };
 

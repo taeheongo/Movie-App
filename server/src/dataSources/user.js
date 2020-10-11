@@ -3,7 +3,6 @@ import { ApolloError, AuthenticationError } from "apollo-server-express";
 import { User } from "./models/User";
 import { auth } from "../utils";
 import { Movie } from "./models/Movie";
-import Axios from "axios";
 
 class UserAPI extends DataSource {
   constructor() {
@@ -30,18 +29,27 @@ class UserAPI extends DataSource {
     user = await User.findOne({ email }).populate("cart").populate("movies");
 
     if (!user) {
-      throw new AuthenticationError("The email doesn't exists.");
+      return {
+        success: false,
+        message: "The email doesn't exists.",
+      };
     }
 
     let isMatch = await user.comparePassword(password);
 
     if (!isMatch) {
-      throw new AuthenticationError("The password is not consistent.");
+      return {
+        success: false,
+        message: "The password is not consistent.",
+      };
     }
 
     user = await user.generateToken();
 
-    return user;
+    this.context.res.cookie("token", user.token);
+    return {
+      success: true,
+    };
   }
 
   async logout() {
@@ -63,13 +71,19 @@ class UserAPI extends DataSource {
     let user = await auth(this.context.token);
 
     if (user) {
-      throw new AuthenticationError("You are logged in.");
+      return {
+        success: false,
+        message: "You are logged in.",
+      };
     }
 
     user = await User.findOne({ email });
 
     if (user) {
-      throw new AuthenticationError("The email already exists.");
+      return {
+        success: false,
+        message: "The email already exists.",
+      };
     }
 
     user = new User({
@@ -81,7 +95,7 @@ class UserAPI extends DataSource {
     await user.save();
 
     // registered successfully!
-    return true;
+    return { success: true };
   }
 
   async book(movieIds) {

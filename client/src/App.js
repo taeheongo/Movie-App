@@ -24,7 +24,7 @@ function App() {
         <Switch>
           <Route exact path="/" component={auth(HomePage, 2)} />
           <Route exact path="/signup" component={auth(SignUpPage, 0)} />
-          <Route path="/movie/:title" component={auth(MoviePage, 2)} />
+          <Route path="/movie/:_id" component={auth(MoviePage, 2)} />
           <Route exact path="/favorites" component={auth(FavorPage, 1)} />
           <Route exact path="/profile" component={auth(ProfilePage, 1)} />
         </Switch>
