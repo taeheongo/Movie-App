@@ -5,6 +5,7 @@
   margin: auto;
   flex-wrap: wrap;
   max-width: 800px;
+  margin-top: 3rem;
 }
 
 .movie-title {
@@ -16,6 +17,7 @@
   margin: auto;
   width: 50%;
   min-width: 230px;
+  margin-bottom: 2rem;
 }
 
 .movie-info-item {
@@ -32,8 +34,10 @@
 }
 
 .movie-preview {
-  margin-top: 4rem;
   font-style: italic;
+  width: 500px;
+  height: 400px;
+  margin: auto;
 }
 
 .movie-preview h6 {
@@ -47,7 +51,7 @@
   background-color: #000;
   font-size: 2rem;
   border-radius: 10px;
-  width: 100px;
+  padding: 0.3rem 1rem;
   margin-top: 1rem;
 }
 
@@ -70,5 +74,10 @@
     font-size: 2rem;
     font-style: italic;
     text-align: center;
+  }
+
+  .movie-preview {
+    height: 200px;
+    width: 300px;
   }
 }

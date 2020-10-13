@@ -57,12 +57,15 @@ export default {
 
       return isBooked;
     },
-    addOrRemoveItem: async (_, { movieIds }, { dataSources }) => {
-      let isSucceeded = await dataSources.UserAPI.addToCartOrRemoveFromCart(
-        movieIds
-      );
+    addToCart: async (_, { movieId }, { dataSources }) => {
+      let result = await dataSources.UserAPI.addToCart(movieId);
 
-      return isSucceeded;
+      return result;
+    },
+    removeFromCart: async (_, { movieId }, { dataSources }) => {
+      let result = await dataSources.UserAPI.removeFromCart(movieId);
+
+      return result;
     },
   },
 };

@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import HomePage from "./components/views/HomePage";
 import MoviePage from "./components/views/MoviePage";
-import FavorPage from "./components/views/FavorPage";
+import CartPage from "./components/views/CartPage";
 import ProfilePage from "./components/views/ProfilePage";
 import Header from "./components/utils/Header";
 import auth from "./components/hoc/auth";
@@ -25,7 +25,7 @@ function App() {
           <Route exact path="/" component={auth(HomePage, 2)} />
           <Route exact path="/signup" component={auth(SignUpPage, 0)} />
           <Route path="/movie/:_id" component={auth(MoviePage, 2)} />
-          <Route exact path="/favorites" component={auth(FavorPage, 1)} />
+          <Route exact path="/cart" component={auth(CartPage, 1)} />
           <Route exact path="/profile" component={auth(ProfilePage, 1)} />
         </Switch>
         <Footer />

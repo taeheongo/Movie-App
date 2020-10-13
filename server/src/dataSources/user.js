@@ -26,7 +26,7 @@ class UserAPI extends DataSource {
       throw new AuthenticationError("You are logged in.");
     }
 
-    user = await User.findOne({ email }).populate("cart").populate("movies");
+    user = await User.findOne({ email });
 
     if (!user) {
       return {
@@ -102,29 +102,30 @@ class UserAPI extends DataSource {
     let user = await auth(this.context.token);
 
     if (!user) {
-      throw new AuthenticationError("You are not logged in.");
+      return {
+        success: false,
+        message: "Login required",
+      };
     }
 
     const session = await User.startSession();
-
+    let movies = user.cart.filter((cartItem) =>
+      movieIds.includes(cartItem._id.toHexString())
+    );
+    let ids = movies.map((movie) => movie._id);
+    console.log(movies);
     try {
       session.startTransaction();
-
-      const movies = await Movie.find({ _id: { $in: movieIds } }, { _id: 1 });
-
-      if (!movies) {
-        throw new ApolloError("No such movies");
-      }
-
-      movieIds = movies.map((movie) => movie._id);
       let result = await User.updateOne(
         {
           _id: user._id,
         },
         {
-          $addToSet: {
-            movies: {
-              $each: movieIds,
+          $pull: {
+            cart: {
+              _id: {
+                $in: ids,
+              },
             },
           },
         },
@@ -132,9 +133,34 @@ class UserAPI extends DataSource {
           session,
         }
       );
+
+      result = await User.updateOne(
+        {
+          _id: user._id,
+        },
+        {
+          $push: {
+            movies: {
+              $each: movies,
+            },
+          },
+        },
+        {
+          session,
+        }
+      );
+
       await session.commitTransaction();
       session.endSession();
-      return !!result.ok;
+      if (!result.ok) {
+        return {
+          success: false,
+        };
+      }
+
+      return {
+        success: true,
+      };
     } catch (error) {
       await session.abortTransaction();
       session.endSession();
@@ -142,11 +168,14 @@ class UserAPI extends DataSource {
     }
   }
 
-  async addToCartOrRemoveFromCart(movieIds) {
+  async addToCart(movieId) {
     let user = await auth(this.context.token);
 
     if (!user) {
-      throw new AuthenticationError("You are not logged in.");
+      return {
+        success: false,
+        message: "Login required.",
+      };
     }
 
     const session = await User.startSession();
@@ -154,59 +183,123 @@ class UserAPI extends DataSource {
     try {
       session.startTransaction();
 
-      const movies = await Movie.find({ _id: { $in: movieIds } }, { _id: 1 });
+      const movie = await Movie.findOne(
+        { _id: movieId },
+        { _id: 1, image: 1, title: 1 }
+      );
+      console.log(movie);
 
-      if (!movies) {
-        throw new ApolloError("No such movies");
-      }
+      const isInCart = user.cart.some(
+        (cartItem) => cartItem._id.toHexString() === movie._id.toHexString()
+      );
 
-      let moviesToBePushed = [];
-      let moviesToBePulled = [];
-
-      movies.forEach((movie) => {
-        for (let userMovie of user.cart) {
-          if (userMovie.toHexString() === movie._id.toHexString()) {
-            moviesToBePulled.push(movie._id);
-            break;
+      let result;
+      if (isInCart) {
+        result = await User.updateOne(
+          {
+            _id: user._id,
+            "cart._id": movie._id,
+          },
+          {
+            $inc: { "cart.$.quantity": 1 },
           }
-        }
-        moviesToBePushed.push(movie._id);
-      });
-      console.log(moviesToBePulled, moviesToBePushed);
-
-      let result = await User.updateOne(
-        {
-          _id: user._id,
-        },
-        {
-          $push: {
-            cart: {
-              $each: moviesToBePushed,
+        );
+      } else {
+        result = await User.updateOne(
+          {
+            _id: user._id,
+          },
+          {
+            $push: {
+              cart: {
+                _id: movie._id,
+                quantity: 1,
+                title: movie.title,
+                image: movie.image,
+              },
             },
           },
-        },
-        {
-          session,
-        }
-      );
-
-      let result2 = await User.updateOne(
-        {
-          _id: user._id,
-        },
-        {
-          $pullAll: {
-            cart: moviesToBePulled,
-          },
-        },
-        {
-          session,
-        }
-      );
+          {
+            session,
+          }
+        );
+      }
 
       await session.commitTransaction();
       session.endSession();
-      return !!result.ok && !!result2.ok;
+
+      if (!result.ok) {
+        return {
+          success: false,
+        };
+      }
+
+      return {
+        success: true,
+      };
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
+  }
+
+  async removeFromCart(movieId) {
+    let user = await auth(this.context.token);
+
+    if (!user) {
+      return {
+        success: false,
+        message: "Login required.",
+      };
+    }
+
+    const session = await User.startSession();
+
+    try {
+      session.startTransaction();
+
+      const movie = await Movie.findOne({ _id: movieId }, { _id: 1 });
+      console.log(movie);
+      const isInCart = user.cart.some(
+        (cartItem) => cartItem._id.toHexString() === movie._id.toHexString()
+      );
+      console.log(isInCart);
+      let result;
+      if (isInCart) {
+        result = await User.updateOne(
+          {
+            _id: user._id,
+            "cart._id": movie._id,
+          },
+          {
+            $pull: {
+              cart: {
+                _id: movie._id,
+              },
+            },
+          },
+          {
+            session,
+          }
+        );
+      } else {
+        session.endSession();
+        return { success: false, message: "Not in cart" };
+      }
+
+      await session.commitTransaction();
+      session.endSession();
+
+      if (!result.ok) {
+        return {
+          success: false,
+        };
+      }
+
+      return {
+        success: true,
+      };
     } catch (error) {
       await session.abortTransaction();
       session.endSession();

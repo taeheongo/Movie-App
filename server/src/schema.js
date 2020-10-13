@@ -17,7 +17,7 @@ const typeDefs = gql`
     movies: [Movie]!
     role: Int!
     token: String!
-    cart: [Movie]!
+    cart: [CartItem]!
   }
 
   type Movie {
@@ -25,24 +25,32 @@ const typeDefs = gql`
     subtitle: String
     image: String
     rating: Float
-    directors: [String]!
-    actors: [String]!
+    directors: [String]
+    actors: [String]
     pubDate: String
     trailor: String
     _id: ID!
   }
 
-  type AuthResult {
+  type Result {
     success: Boolean!
     message: String
   }
 
+  type CartItem {
+    _id: ID!
+    quantity: Int!
+    title: String
+    image: String
+  }
+
   type Mutation {
-    register(email: String!, username: String!, password: String!): AuthResult!
-    login(email: String!, password: String!): AuthResult
+    register(email: String!, username: String!, password: String!): Result!
+    login(email: String!, password: String!): Result!
     logout: Boolean!
-    book(movieIds: [ID]!): Boolean!
-    addOrRemoveItem(movieIds: [ID]!): Boolean!
+    book(movieIds: [ID]!): Result!
+    addToCart(movieId: ID!): Result!
+    removeFromCart(movieId: ID!): Result!
   }
 `;
 

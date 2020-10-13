@@ -1,5 +1,5 @@
 import React from "react";
-
+import { withRouter } from "react-router-dom";
 import { gql, useMutation, useApolloClient } from "@apollo/client";
 
 export const LOG_OUT = gql`
@@ -8,7 +8,7 @@ export const LOG_OUT = gql`
   }
 `;
 
-const LogoutButton = () => {
+const LogoutButton = ({ history }) => {
   const client = useApolloClient();
 
   const [logout] = useMutation(LOG_OUT, {
@@ -28,7 +28,10 @@ const LogoutButton = () => {
     },
   });
 
-  const logoutClickHanlder = () => logout();
+  const logoutClickHanlder = () => {
+    logout();
+    history.push("/");
+  };
 
   return (
     <button className="pure-button" onClick={logoutClickHanlder}>
@@ -37,4 +40,4 @@ const LogoutButton = () => {
   );
 };
 
-export default LogoutButton;
+export default withRouter(LogoutButton);

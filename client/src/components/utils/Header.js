@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Badge } from "antd";
@@ -15,17 +14,17 @@ const Header = ({ history }) => {
   const RightMenu = data?.isLoggedIn ? (
     <div className="menu">
       <div className="menu-item">
-        <Link to="/">Home</Link>
+        <a href="/">Home</a>
       </div>
       <div className="menu-item">
-        <Link to="/cart">
+        <a href="/cart">
           <Badge count={5}>
             <ShoppingCartOutlined style={{ height: "2rem", width: "2rem" }} />
           </Badge>
-        </Link>
+        </a>
       </div>
       <div className="menu-item">
-        <Link to="/profile">Profile</Link>
+        <a href="/profile">Profile</a>
       </div>
       <div className="menu-item">
         <LogoutButton />
@@ -34,13 +33,13 @@ const Header = ({ history }) => {
   ) : (
     <div className="menu">
       <div className="menu-item">
-        <Link to="/">Home</Link>
+        <a href="/">Home</a>
       </div>
       <div className="menu-item">
         <LoginButton />
       </div>
       <div className="menu-item">
-        <Link to="/signup">Sign Up</Link>
+        <a href="/signup">Sign Up</a>
       </div>
     </div>
   );
@@ -49,9 +48,9 @@ const Header = ({ history }) => {
     <header className="header">
       <div className="menu">
         <div className="menu-item">
-          <Link to="/">
+          <a href="/">
             <img src="logo.png" alt="movie-app" className="menu-logo" />
-          </Link>
+          </a>
         </div>
         <div className="menu-item">
           <a

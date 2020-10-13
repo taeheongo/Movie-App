@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useQuery, gql, useApolloClient } from "@apollo/client";
 
 export const MOVIE_FRAGMENT = gql`
@@ -26,7 +26,10 @@ export const USER_FRAGMENT = gql`
       ...movieFragment
     }
     cart {
-      ...movieFragment
+      _id
+      quantity
+      image
+      title
     }
   }
   ${MOVIE_FRAGMENT}
@@ -45,39 +48,40 @@ export default (WrappedComponent, option, adminRoute = false) => {
   const client = useApolloClient();
 
   const HocComponent = ({ ...props }) => {
-    const { data } = useQuery(Me);
-    console.log("me:", data);
+    const { data, refetch } = useQuery(Me, {
+      onCompleted({ me }) {
+        if (me) {
+          const { role } = me;
+          console.log("me:", me);
 
-    useEffect(() => {
-      if (data && data.me) {
-        const { role } = data.me;
-        // set isLoggedIn true
-        client.cache.modify({
-          fields: {
-            isLoggedIn() {
-              return true;
+          // set isLoggedIn true
+          client.cache.modify({
+            fields: {
+              isLoggedIn() {
+                return true;
+              },
             },
-          },
-        });
+          });
 
-        if (option === 0) {
-          props.history.push("/");
-        } else {
-          if (adminRoute) {
-            if (role === 0) {
-              props.history.push("/");
+          if (option === 0) {
+            props.history.push("/");
+          } else {
+            if (adminRoute) {
+              if (role === 0) {
+                props.history.push("/");
+              }
             }
           }
+        } else {
+          if (option === 1) {
+            alert("Login required.");
+            props.history.push("/");
+          }
         }
-      } else {
-        if (option === 1) {
-          alert("Login required.");
-          props.history.push("/");
-        }
-      }
-    }, [data, props.history]);
+      },
+    });
 
-    return <WrappedComponent {...props} user={data?.me} />;
+    return <WrappedComponent {...props} user={data?.me} refetch={refetch} />;
   };
 
   return HocComponent;

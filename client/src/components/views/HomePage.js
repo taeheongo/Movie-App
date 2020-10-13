@@ -1,6 +1,5 @@
 import React from "react";
 import { gql, useQuery } from "@apollo/client";
-import { Link } from "react-router-dom";
 
 import Logo from "../utils/Logo";
 import Movie from "../utils/Movie";
@@ -34,9 +33,9 @@ const HomePage = ({ history }) => {
         {data ? (
           data.currentMovies.map((movie, i) => {
             return (
-              <Link key={i} to={`/movie/${movie._id}`}>
+              <a key={i} href={`/movie/${movie._id}`}>
                 <Movie {...movie} />;
-              </Link>
+              </a>
             );
           })
         ) : (

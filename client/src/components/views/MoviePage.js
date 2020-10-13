@@ -1,5 +1,5 @@
-import React from "react";
-import { gql, useQuery } from "@apollo/client";
+import React, { useEffect } from "react";
+import { gql, useQuery, useMutation, useApolloClient } from "@apollo/client";
 import { useParams } from "react-router-dom";
 
 import { MOVIE_FRAGMENT } from "../hoc/auth";
@@ -16,18 +16,32 @@ export const getMovie = gql`
   ${MOVIE_FRAGMENT}
 `;
 
+export const addItem = gql`
+  mutation addItem($movieId: ID!) {
+    addToCart(movieId: $movieId) {
+      success
+      message
+    }
+  }
+`;
+
 const MoviePage = ({ history }) => {
   const { _id } = useParams();
-
   const { data } = useQuery(getMovie, {
     variables: {
       movieId: _id,
     },
   });
 
-  console.log("movie: ", data);
+  const [addToCart, result] = useMutation(addItem);
+  const addToCartHandler = () =>
+    addToCart({
+      variables: { movieId: _id },
+    });
 
-  const addToCartHandler = () => {};
+  if (result && result.data) {
+    alert("Added to cart successfully");
+  }
 
   return data?.movie ? (
     <main>
@@ -41,7 +55,7 @@ const MoviePage = ({ history }) => {
           <div className="movie-info-item">
             <span>Actors: </span>
             <div>
-              {data.movie.actors.map((actor, i) => (
+              {data.movie.actors?.map((actor, i) => (
                 <span key={i}>{`${actor} `}</span>
               ))}
             </div>

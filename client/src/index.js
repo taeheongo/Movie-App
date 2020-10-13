@@ -29,6 +29,8 @@ client.cache.writeQuery({
   query: IS_LOGGED_IN,
   data: {
     isLoggedIn: false,
+    user: null,
+    cart: [],
   },
 });
 

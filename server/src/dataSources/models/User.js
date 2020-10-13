@@ -25,11 +25,25 @@ const userSchema = mongoose.Schema({
     default: 0,
   },
   movies: {
-    type: [{ type: ObjectId, ref: "Movie" }],
+    type: [
+      {
+        _id: { type: ObjectId, ref: "Movie" },
+        quantity: Number,
+        title: String,
+        image: String,
+      },
+    ],
     default: [],
   },
   cart: {
-    type: [{ type: ObjectId, ref: "Movie" }],
+    type: [
+      {
+        _id: { type: ObjectId, ref: "Movie" },
+        quantity: Number,
+        title: String,
+        image: String,
+      },
+    ],
     default: [],
   },
   githubId: String,
