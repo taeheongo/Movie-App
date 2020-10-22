@@ -70,7 +70,11 @@ const CartPage = ({ user, refetch }) => {
               <td>
                 {
                   <a href={`/movie/${cartItem._id}`}>
-                    <img src={cartItem.image} className="cart-table-img" />
+                    <img
+                      src={cartItem.image}
+                      className="cart-table-img"
+                      alt={cartItem.title}
+                    />
                   </a>
                 }
               </td>

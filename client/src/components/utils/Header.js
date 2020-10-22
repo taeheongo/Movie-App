@@ -7,6 +7,8 @@ import { IS_LOGGED_IN } from "../../index";
 import LoginButton from "./LoginButton";
 import LogoutButton from "./LogoutButton";
 import "./Header.css";
+import logo from "./images/logo.png";
+import github from "./images/github.png";
 
 const Header = ({ history }) => {
   const { data } = useQuery(IS_LOGGED_IN);
@@ -49,7 +51,7 @@ const Header = ({ history }) => {
       <div className="menu">
         <div className="menu-item">
           <a href="/">
-            <img src="logo.png" alt="movie-app" className="menu-logo" />
+            <img src={logo} alt="movie-app" className="menu-logo" />
           </a>
         </div>
         <div className="menu-item">
@@ -58,7 +60,7 @@ const Header = ({ history }) => {
             rel="noopener noreferrer"
             target="_blank"
           >
-            <img src="github.png" alt="github" className="menu-logo" />
+            <img src={github} alt="github" className="menu-logo" />
           </a>
         </div>
       </div>

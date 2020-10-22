@@ -5,10 +5,10 @@ const { Meta } = Card;
 
 function Movie({ title, image, subtitle }) {
   return (
-    <div>
+    <div style={{ width: "100%", height: "100%" }}>
       <Card
+        style={{ width: "100%", height: "100%" }}
         hoverable
-        style={{ height: "100%" }}
         cover={<img alt={subtitle || title} src={image} />}
       >
         <Meta title={subtitle || title} />

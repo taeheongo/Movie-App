@@ -1,5 +1,6 @@
 import React from "react";
 
+import github from "./images/github.png";
 import "./GithubLogin.css";
 
 const GithubLogin = ({ clientId }) => {
@@ -9,7 +10,7 @@ const GithubLogin = ({ clientId }) => {
   return (
     <button className="github-login" style={{ color: "#fff" }}>
       <a href={GithubURI}>
-        <img src="github.png" alt="github" /> login with github
+        <img src={github} alt="github" /> login with github
       </a>
     </button>
   );

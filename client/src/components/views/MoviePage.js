@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { gql, useQuery, useMutation, useApolloClient } from "@apollo/client";
+import React from "react";
+import { gql, useQuery, useMutation } from "@apollo/client";
 import { useParams } from "react-router-dom";
 
 import { MOVIE_FRAGMENT } from "../hoc/auth";
@@ -33,15 +33,21 @@ const MoviePage = ({ history }) => {
     },
   });
 
-  const [addToCart, result] = useMutation(addItem);
+  const [addToCart] = useMutation(addItem, {
+    onCompleted({ addToCart }) {
+      if (addToCart?.success) {
+        alert("Successfully added to cart");
+      } else {
+        if (!addToCart?.success) {
+          alert(addToCart.message);
+        }
+      }
+    },
+  });
   const addToCartHandler = () =>
     addToCart({
       variables: { movieId: _id },
     });
-
-  if (result && result.data) {
-    alert("Added to cart successfully");
-  }
 
   return data?.movie ? (
     <main>

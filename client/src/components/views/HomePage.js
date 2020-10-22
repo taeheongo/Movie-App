@@ -34,7 +34,7 @@ const HomePage = ({ history }) => {
           data.currentMovies.map((movie, i) => {
             return (
               <a key={i} href={`/movie/${movie._id}`}>
-                <Movie {...movie} />;
+                <Movie {...movie} />
               </a>
             );
           })
