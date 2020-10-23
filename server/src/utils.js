@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { User } from "./dataSources/models/User";
-import { AuthenticationError } from "apollo-server-express";
 
 export const isEmail = (email) => {
   if (typeof email !== "string") {
@@ -48,11 +47,12 @@ export const auth = async (token) => {
     return user;
   } catch (error) {
     if (error.message === "jwt expired") {
-      throw new AuthenticationError("Login required.");
+      user = null;
     } else {
       throw error;
     }
   }
+  return user;
 };
 
 export const validPassword = (password) => {

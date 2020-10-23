@@ -14,10 +14,10 @@ const typeDefs = gql`
     _id: ID!
     username: String!
     email: String
-    movies: [Movie]!
+    movies: [Item]!
     role: Int!
     token: String!
-    cart: [CartItem]!
+    cart: [Item]!
   }
 
   type Movie {
@@ -37,7 +37,7 @@ const typeDefs = gql`
     message: String
   }
 
-  type CartItem {
+  type Item {
     _id: ID!
     quantity: Int!
     title: String

@@ -1,20 +1,6 @@
 import React from "react";
 import { useQuery, gql, useApolloClient } from "@apollo/client";
 
-export const MOVIE_FRAGMENT = gql`
-  fragment movieFragment on Movie {
-    _id
-    title
-    subtitle
-    image
-    rating
-    directors
-    actors
-    pubDate
-    trailor
-  }
-`;
-
 export const USER_FRAGMENT = gql`
   fragment userFragment on User {
     _id
@@ -23,16 +9,18 @@ export const USER_FRAGMENT = gql`
     role
     token
     movies {
-      ...movieFragment
-    }
-    cart {
       _id
       quantity
       image
       title
     }
+    cart {
+      _id
+      quantity
+      title
+      image
+    }
   }
-  ${MOVIE_FRAGMENT}
 `;
 
 export const Me = gql`

@@ -1,5 +1,5 @@
-import React from "react";
-import { useQuery } from "@apollo/client";
+import React, { useState, useEffect } from "react";
+import { useQuery, gql } from "@apollo/client";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Badge } from "antd";
 
@@ -10,8 +10,28 @@ import "./Header.css";
 import logo from "./images/logo.png";
 import github from "./images/github.png";
 
+const Me = gql`
+  query me {
+    me {
+      cart {
+        _id
+      }
+    }
+  }
+`;
+
 const Header = ({ history }) => {
   const { data } = useQuery(IS_LOGGED_IN);
+  const result = useQuery(Me, {
+    pollInterval: 1000,
+  });
+  const [Count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (result?.data?.me?.cart) {
+      setCount(result?.data?.me?.cart?.length);
+    }
+  }, [result.data]);
 
   const RightMenu = data?.isLoggedIn ? (
     <div className="menu">
@@ -20,7 +40,7 @@ const Header = ({ history }) => {
       </div>
       <div className="menu-item">
         <a href="/cart">
-          <Badge count={5}>
+          <Badge count={Count}>
             <ShoppingCartOutlined style={{ height: "2rem", width: "2rem" }} />
           </Badge>
         </a>

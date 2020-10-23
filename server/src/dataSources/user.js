@@ -187,7 +187,6 @@ class UserAPI extends DataSource {
         { _id: movieId },
         { _id: 1, image: 1, title: 1 }
       );
-      console.log(movie);
 
       const isInCart = user.cart.some(
         (cartItem) => cartItem._id.toHexString() === movie._id.toHexString()
@@ -259,23 +258,21 @@ class UserAPI extends DataSource {
     try {
       session.startTransaction();
 
-      const movie = await Movie.findOne({ _id: movieId }, { _id: 1 });
-      console.log(movie);
       const isInCart = user.cart.some(
-        (cartItem) => cartItem._id.toHexString() === movie._id.toHexString()
+        (cartItem) => cartItem._id.toHexString() === movieId
       );
-      console.log(isInCart);
+
       let result;
       if (isInCart) {
         result = await User.updateOne(
           {
             _id: user._id,
-            "cart._id": movie._id,
+            "cart._id": movieId,
           },
           {
             $pull: {
               cart: {
-                _id: movie._id,
+                _id: movieId,
               },
             },
           },

@@ -2,10 +2,23 @@ import React from "react";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import { useParams } from "react-router-dom";
 
-import { MOVIE_FRAGMENT } from "../hoc/auth";
 import YoutubePlayer from "../utils/YoutubePlayer";
 import Loading from "../utils/Loading";
 import "./MoviePage.css";
+
+export const MOVIE_FRAGMENT = gql`
+  fragment movieFragment on Movie {
+    _id
+    title
+    subtitle
+    image
+    rating
+    directors
+    actors
+    pubDate
+    trailor
+  }
+`;
 
 export const getMovie = gql`
   query movie($movieId: ID!) {
